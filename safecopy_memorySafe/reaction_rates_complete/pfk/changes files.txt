@@ -1,0 +1,6 @@
+20200225_pfk_kinetics_experiment:
+- deleted rows D E F from the excel files (empty in the experiment)
+- time was setted to 50 min; for the ones measured less time the values were coppie to fill the empty cells
+
+20200225_pfk_kinetics_baseline:
+- deleted rows D E F from the excel files (empty in the experiment)

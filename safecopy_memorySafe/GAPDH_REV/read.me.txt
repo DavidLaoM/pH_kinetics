@@ -1,0 +1,10 @@
+- In the kinetic experiments there are different time window for the measurements (time btwn reads varies: each 12 or 4 seconds)
+- [protein]=2.0106363826145692 mg/ml
+- number of pH testes: 10
+- pH tested: 6.19, 6.26, 6.41, 6.60, 6.81, 7.06, 7.29, 7.51, 7.68, 7.81
+- Kinetic assays measure: NADH decay
+- To convert abs to NADH decay (um.min-1.mgprotein-1): abs*60*60/(total_protein*4.3992)
+In this formula it's already included the dilution of the cell extract in the reaction volume --> 300ul/5ul=60
+- For the background correction: the background was measured before the addition of the start chemical.
+Calculate the background rates and subtract to the rates after adition of substrate. The small decrease in the abs
+observed in for the background is due to oxidation.

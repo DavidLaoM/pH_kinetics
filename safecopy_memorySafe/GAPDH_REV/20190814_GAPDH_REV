@@ -1,0 +1,260 @@
+import os
+import pandas as pd
+import matplotlib.pyplot as plt
+import numpy as np
+import xlrd
+import re
+from scipy.interpolate import *
+import sys
+
+os.chdir(r'C:\Users\lga420\Desktop\python_test\GAPDH_REV')
+cwd = os.getcwd()
+print("Current working directory is:", cwd)
+
+sheets_dict = pd.read_excel('20190814_GAPDH_R_py.xlsx', sheet_name=None) #None -> Dict of DataFrames is returned, with keys representing sheets.
+#print(type(sheets_dict))
+#print(sheets_dict.keys())
+full_table = pd.DataFrame() #empty dataframe
+
+# define time
+def time_convert(y):
+    out = []
+    for x in y:
+        h,m,s = map(int,str(x).split(':'))
+        out.append((h*60+m)*60+s)
+    return pd.Series(out)
+
+# remove empty columns
+ctr = True
+for name, sheet in sheets_dict.items():
+    tempcol = [a for a in sheet.columns if 'Temp' in a]
+    #print(type(tempcol))
+    if ctr:
+        df = sheet.dropna(axis=1)
+        df = df.drop(tempcol[0], axis=1)
+        ctr = False
+    else:
+        s = sheet.dropna(axis=1)
+        if 'Time(hh:mm:ss)' in s.columns:
+            s = s.drop(tempcol[0], axis=1)
+            df = df.merge(s, how='outer', left_on='Time(hh:mm:ss)', right_on='Time(hh:mm:ss)')
+    #print(df.columns)
+#print(df.head())
+
+colnames = {'A3': 'F1', 'B3':'F2'}
+timecol = [a for a in df.columns if 'Time' in a]
+df.rename(columns={timecol[0]:'time'}, inplace=True)
+df['time'] = time_convert(df['time']) /60.
+full_table.reset_index(inplace=True, drop=True)
+result = df.dtypes
+
+#[proteina] BCA
+total_protein=2.0106363826145692
+
+
+#calculate slopes
+df_t=df.iloc[:,0] #time column
+df1=df.iloc[:,1:] #data columns
+#remove G and H columns
+df1.columns.str.contains('^G', case=False)
+df1=df1.loc[:,~df1.columns.str.contains('^G', case=False)]
+df1.columns.str.contains('^H', case=False)
+df1=df1.loc[:,~df1.columns.str.contains('^H', case=False)]
+df1_1_list = df1.iloc[1].tolist()
+column=df1.iloc[:,0:]
+row=df1.iloc[0:1,:]
+
+my_list_values=[]
+my_list_slopes=[]
+j=0
+n=3 #needs to be changed
+d=0
+n2=n
+while j <= (len(column) - n2):
+        element_values = column.iloc[j:n,0:len(row.T)]
+        my_list_values.append(element_values)
+        slope, intercept = np.polyfit(df_t[0:n2], element_values, 1)
+        my_list_slopes.append(abs(slope))
+        n = n + 1
+        j = j + 1
+del n
+
+#calculate max slopes
+max_slopes=np.max(my_list_slopes, axis=0)
+df_max_slopes = pd.DataFrame(max_slopes)
+df_max_slopes_cl=df_max_slopes.T
+df_max_slopes_cl=df_max_slopes_cl*60*60/(total_protein*4.3992) #convert abs to protein
+
+#correct for dilutions
+list_1=[]
+i=[8,4,2,1]*int((df_max_slopes_cl.size)/4)
+#introduce protein correction and NADH
+df_max_slopes_cl=(df_max_slopes_cl)*i
+x=np.arange(start=0, stop=df_max_slopes_cl.size, step=1)
+# print(x,df_max_slopes_cl)
+# plt.scatter(x,df_max_slopes_cl)
+# plt.show()
+
+#max_slope per dilution
+f1_max_slope_T=(df_max_slopes_cl.iloc[:,3::4]).T
+f1_max_slope=f1_max_slope_T.reset_index(drop=True)
+f2_max_slope_T=(df_max_slopes_cl.iloc[:,2::4]).T
+f2_max_slope=f2_max_slope_T.reset_index(drop=True)
+f4_max_slope_T=(df_max_slopes_cl.iloc[:,1::4]).T
+f4_max_slope=f4_max_slope_T.reset_index(drop=True)
+f8_max_slope_T=(df_max_slopes_cl.iloc[:,0::4]).T
+f8_max_slope=f8_max_slope_T.reset_index(drop=True)
+f1_f2_f4_f8_max_values_slope=pd.concat([f1_max_slope.T,f2_max_slope.T,f4_max_slope.T,f8_max_slope.T], ignore_index=True)
+f1_f2_f4_f8_max_values_slope.index = ['f1', 'f2', 'f4', 'f8']
+
+#export_excel=f1_f2_f4_f8_max_values_slope.to_excel(r'C:\Users\lga420\Desktop\python_test\f1_f2_f4_f8_max_values_slope2.xlsx')
+#remove outliner: improve --> search for max std and remove the correspondent value in the mean data or discard values when std>above 10% (std has to be calculated in % of the mean)
+f8_max_slope_nan = f8_max_slope.replace(f8_max_slope.iloc[15:16, :], np.nan) #manually by looking at the plot and values
+f8_max_slope=f8_max_slope_nan
+f1_max_slope_nan = f1_max_slope.replace(f1_max_slope.iloc[28:29, :], np.nan) #manually by looking at the plot and values
+f1_max_slope=f1_max_slope_nan
+
+#std replicates (blocks of 3)
+f1_std_max_slope=f1_max_slope.groupby(np.arange(len(f1_max_slope))//3, axis=0).std()
+f2_std_max_slope=f2_max_slope.groupby(np.arange(len(f2_max_slope))//3, axis=0).std()
+f4_std_max_slope=f4_max_slope.groupby(np.arange(len(f4_max_slope))//3, axis=0).std()
+f8_std_max_slope=f8_max_slope.groupby(np.arange(len(f8_max_slope))//3, axis=0).std()
+replicates_std_max_slope=pd.concat([f1_std_max_slope.T,f2_std_max_slope.T,f4_std_max_slope.T,f8_std_max_slope.T])
+replicates_std_max_slope.index = ['f1', 'f2', 'f4', 'f8']
+
+
+#mean max_slope per dilution
+f1_mean_max_slope=f1_max_slope.groupby(np.arange(len(f1_max_slope))//3, axis=0).mean()
+f2_mean_max_slope=f2_max_slope.groupby(np.arange(len(f2_max_slope))//3, axis=0).mean()
+f4_mean_max_slope=f4_max_slope.groupby(np.arange(len(f4_max_slope))//3, axis=0).mean()
+f8_mean_max_slope=f8_max_slope.groupby(np.arange(len(f8_max_slope))//3, axis=0).mean()
+f1_f2_f4_f8_max_slope=pd.concat([f1_mean_max_slope.T,f2_mean_max_slope.T,f4_mean_max_slope.T,f8_mean_max_slope.T],ignore_index=True)
+f1_f2_f4_f8_max_slope.index = ['f1', 'f2', 'f4', 'f8'] # new_index
+
+#get position in the dataframe with highest std (in %)
+#get max std (in % to the mean)
+max_std_tr=(replicates_std_max_slope.max()).max() #max error technical replicates (outliers already removed)
+max_std_tr_2=(replicates_std_max_slope.max())
+
+row_max_std_tr=replicates_std_max_slope[(replicates_std_max_slope.values.ravel() == max_std_tr).reshape(replicates_std_max_slope.shape).any(1)] #gives row
+coord_max_std_tr=[(x, replicates_std_max_slope.columns[y]) for x, y in zip(*np.where(replicates_std_max_slope.values == max_std_tr))] #gives shape
+# error_allowed=max_std_tr*100/mean_max_std_out_2
+# print(f1_f2_f4_f8_max_slope)
+errors=replicates_std_max_slope*100/f1_f2_f4_f8_max_slope
+error_allowed=((errors.max()).max())
+
+#plot abs340 non normalized
+#
+import matplotlib.cm as cm
+colors = iter(cm.rainbow(np.linspace(0, 3, 9)))
+pH = [6.19, 6.26, 6.41, 6.60, 6.81, 7.06, 7.29, 7.51, 7.68, 7.81] # new_index
+plt.errorbar(pH,f1_mean_max_slope.values, f1_std_max_slope.values, linestyle='None', marker='o', color = next(colors))
+plt.errorbar(pH,f2_mean_max_slope.values, f2_std_max_slope.values, linestyle='None', marker='o', color = next(colors))
+plt.errorbar(pH,f4_mean_max_slope.values, f4_std_max_slope.values, linestyle='None', marker='o', color = next(colors))
+plt.errorbar(pH,f8_mean_max_slope.values, f8_std_max_slope.values, linestyle='None', marker='o', color = next(colors))
+plt.ylim([0, 6])
+plt.xlim([6, 8])
+plt.title('GAPDH_Reverse')
+plt.xlabel('pH')
+plt.ylabel('NADH decay (\u03BCmol.min-1.mgProtein)')
+plt.legend((f1_f2_f4_f8_max_slope.index.values))
+plt.grid(which='minor', linestyle=':', linewidth='0.5', color='black')
+plt.grid(True)
+plt.show()
+
+# normalized values: needs to be changes to different datasets (here pH=6.81 is the 2 pH)
+ref=4 #position reference
+f1_max_slope_no=f1_max_slope/f1_mean_max_slope.iloc[ref,:]
+f2_max_slope_no=f2_max_slope/f1_mean_max_slope.iloc[ref,:]
+f4_max_slope_no=f4_max_slope/f1_mean_max_slope.iloc[ref,:]
+f8_max_slope_no=f8_max_slope/f1_mean_max_slope.iloc[ref,:]
+
+#normalized mean values:
+f1_mean_max_slope_no=f1_mean_max_slope/f1_mean_max_slope.iloc[ref,:]
+f2_mean_max_slope_no=f2_mean_max_slope/f2_mean_max_slope.iloc[ref,:]
+f4_mean_max_slope_no=f4_mean_max_slope/f4_mean_max_slope.iloc[ref,:]
+f8_mean_max_slope_no=f8_mean_max_slope/f8_mean_max_slope.iloc[ref,:]
+replicates_mean_max_slope_no=pd.concat([f1_mean_max_slope_no.T,f2_mean_max_slope_no.T,f4_mean_max_slope_no.T,f8_mean_max_slope_no.T])
+
+#normalized std: needs to be changes to different datasets (here pH=6.81 is the 2 pH)
+f1_std_max_slope_no=f1_max_slope_no.groupby(np.arange(len(f1_max_slope_no))//3, axis=0).std()
+f2_std_max_slope_no=f2_max_slope_no.groupby(np.arange(len(f2_max_slope_no))//3, axis=0).std()
+f4_std_max_slope_no=f4_max_slope_no.groupby(np.arange(len(f4_max_slope_no))//3, axis=0).std()
+f8_std_max_slope_no=f8_max_slope_no.groupby(np.arange(len(f8_max_slope_no))//3, axis=0).std()
+replicates_std_max_slope_no=pd.concat([f1_std_max_slope_no.T,f2_std_max_slope_no.T,f4_std_max_slope_no.T,f8_std_max_slope_no.T])
+replicates_std_max_slope.index = ['f1', 'f2', 'f4', 'f8']
+
+#plot abs340 normalized
+#
+import matplotlib.cm as cm
+colors = iter(cm.rainbow(np.linspace(0, 3, 9)))
+pH = [6.19, 6.26, 6.41, 6.60, 6.81, 7.06, 7.29, 7.51, 7.68, 7.81] # new_index
+plt.errorbar(pH,f1_mean_max_slope_no.values, f1_std_max_slope_no.values, linestyle='None', marker='o', color = next(colors))
+plt.errorbar(pH,f2_mean_max_slope_no.values, f2_std_max_slope_no.values, linestyle='None', marker='o', color = next(colors))
+plt.errorbar(pH,f4_mean_max_slope_no.values, f4_std_max_slope_no.values, linestyle='None', marker='o', color = next(colors))
+plt.errorbar(pH,f8_mean_max_slope_no.values, f8_std_max_slope_no.values, linestyle='None', marker='o', color = next(colors))
+plt.ylim([0, 1.6])
+plt.xlim([6, 8])
+plt.title('GAPDH_Reverse')
+plt.xlabel('pH')
+plt.ylabel('NADH decay (\u03BCmol.min-1.mgProtein-1 (normalized))')
+plt.legend((f1_f2_f4_f8_max_slope.index.values))
+plt.grid(which='minor', linestyle=':', linewidth='0.5', color='black')
+plt.grid(True)
+plt.show()
+
+
+#plot mean dilution
+#not normalized
+f4_f2_f1_max = pd.concat([f4_max_slope,f2_max_slope,f1_max_slope])
+f4_f2_f1_max_mean = pd.concat([f4_mean_max_slope.T, f2_mean_max_slope.T,f1_mean_max_slope.T])
+f4_f2_f1_max_mean_mean=f4_f2_f1_max_mean.mean(axis=0)
+f4_f2_f1_std_max_mean_mean=f4_f2_f1_max_mean.std(axis=0)
+#normalized
+f4_f2_f1_max_no = pd.concat([f4_max_slope_no,f2_max_slope_no,f1_max_slope_no])
+f4_f2_f1_max_mean_no = pd.concat([f4_mean_max_slope_no.T, f2_mean_max_slope_no.T,f1_mean_max_slope_no.T])
+f4_f2_f1_max_mean_mean_no=f4_f2_f1_max_mean_no.mean(axis=0)
+f4_f2_f1_std_max_mean_mean_no=f4_f2_f1_max_mean_no.std(axis=0)
+#print(f1_f2_max_mean_mean_no)
+# print(f1_f2_std_max_mean_mean_no)
+
+export_excel=f4_f2_f1_max_mean_mean_no.to_excel(r'C:\Users\lga420\Desktop\python_test\1.xlsx')
+
+##not normalized
+pH_1 = [6.19, 6.26, 6.41, 6.60, 6.81, 7.06, 7.29, 7.51, 7.68, 7.81] # new_index
+pH=np.array(pH_1)
+p=np.poly1d(np.polyfit(pH,f4_f2_f1_max_mean_mean.values,3))
+plt.errorbar(pH,f4_f2_f1_max_mean_mean.values, f4_f2_f1_std_max_mean_mean.values, linestyle='None', marker='o')
+t = np.linspace(6.19, 7.9, 200)
+plt.plot(pH,f4_f2_f1_max_mean_mean.values, 'o', t, p(t), 'r-')
+plt.xlim([6, 8])
+plt.ylim([0,6])
+plt.title('GAPDH_Reverse (f4_f2_f1)')
+plt.xlabel('pH')
+plt.ylabel('NADH decay (\u03BCmol.min-1.mgProtein-1 (normalized))')
+plt.grid(which='minor', linestyle=':', linewidth='0.5', color='black')
+plt.grid(True)
+plt.show()
+
+#normalized
+pH_1 = [6.19, 6.26, 6.41, 6.60, 6.81, 7.06, 7.29, 7.51, 7.68, 7.81] # new_index
+pH=np.array(pH_1)
+p=np.poly1d(np.polyfit(pH,f4_f2_f1_max_mean_mean_no.values,3))
+plt.errorbar(pH,f4_f2_f1_max_mean_mean_no.values, f4_f2_f1_std_max_mean_mean_no.values, linestyle='None', marker='o')
+t = np.linspace(6.19, 7.9, 200)
+plt.plot(pH,f4_f2_f1_max_mean_mean_no.values, 'o', t, p(t), 'r-')
+plt.xlim([6, 8])
+plt.ylim([0,1.6])
+plt.title('GAPDH_Reverse (f4_f2_f1)')
+plt.xlabel('pH')
+plt.ylabel('NADH decay (\u03BCmol.min-1.mgProtein-1 (normalized))')
+plt.grid(which='minor', linestyle=':', linewidth='0.5', color='black')
+plt.grid(True)
+plt.show()
+
+#get variables
+dir=pd.DataFrame(dir())
+#export_excel=dir.to_excel(r'C:\Users\lga420\Desktop\python_test\dir.xlsx')
+#select dilutions:
+
+

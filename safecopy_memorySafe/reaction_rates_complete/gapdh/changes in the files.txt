@@ -1,0 +1,9 @@
+baseline -> sheet 19 and 21 deleted (repetitions)
+experiment -> sheet 20 and 22 deleted (repetitions)
+experiment -> results extended to fill 10 min experiment (sheet2 and sheet10-16)
+experiment -> result F2 sheet11 removed in the script (outlier)
+experiment -> row 7 on sheet 14 replaced by row 7 on sheet 16
+baseline -> row 8 on sheet 13 replaced by row 10 on sheet 19
+experiment -> row 8 on sheet 14 replaced by row 10 on sheet 20
+dilution cell free extracted corrected by series
+
