@@ -28,7 +28,7 @@
 
  Reproducibility:
  - The entire computational work, including article figures and supplementary figures, can be reproduced using matlab. For this we recommend runnign the 'main_(...).m' files in the root folder.
- - Models were also generated in python and SBML format. These can be found in the folder /models, /python and /sbml, respectively.
+ - Models were also generated in python and SBML format. These can be found in the folder /models, /python and /sbml, respectively. These reproduce the progression curve simulation for the highest pH value (pH7.90 for all enzymes except GAPDH, pH7.81) and the lowest dilution factor.
 
  Usage:
  Three main scripts have been created to drive the user along the pipeline.
