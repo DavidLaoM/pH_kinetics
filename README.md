@@ -27,7 +27,7 @@
  - A functional matlab installation (MATLAB 9.3 or higher).
 
  Reproducibility:
- - The entire computational work, including article figures and supplementary figures, can be reproduced. For this we recommend runnign the _main_(...).m_ files in the root folder.
+ - The entire computational work, including article figures and supplementary figures, can be reproduced. For this we recommend runnign the _main_(...).m files in the root folder.
  - Models were also generated in python and SBML format. These can be found in the folder /models, /python and /sbml, respectively. These reproduce the progression curve simulation for the highest pH value (pH7.90 for all enzymes except GAPDH, pH7.81) and the lowest dilution factor.
 
  Usage:
