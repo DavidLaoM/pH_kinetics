@@ -1,7 +1,7 @@
 % % vmExp
 % Generation of the manuscript figure that plots the experimental and
 % computational estimates for the maximum reaction rates.
-clear, close all
+% clear, close all
 % 
 enzymeList = {'hxk_parEst';... %1 hxk
     'pgi_parEst';... %2 pgi

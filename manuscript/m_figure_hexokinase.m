@@ -1,5 +1,6 @@
 % % M_FIGURE_HEXOKINASE.M
 % 
+% tic
 if setup.fast_option == 0 % directly recall the workspace from here
     temp_setup = setup;
     pEst_hxk_keq_dependency
@@ -184,7 +185,7 @@ for recallHXKestimates = 1
         pHvals = unique(import_eno.treatedData.pH_corrected);
     end
 %     % %% (0.1) Experimental Vmax determination
-    tempSave = setup.plotOutput;
+%     tempSave = setup.plotOutput;
     setup.plotOutput = 0;
     % %% (0.1) Calculation of rates: moving window
     minwindow = 6; % minimum size of the window
@@ -204,7 +205,7 @@ for recallHXKestimates = 1
     idxs2consider = ones(size(DF));
     % Experimental rates determination and plotting
     expRatesDetermination;
-    setup.plotOutput = tempSave;
+%     setup.plotOutput = tempSave;
     
     % %% (1.1) Simple parameter fit. Parameter estimation
     setup.ode = 'vanHeerden2014';
@@ -364,7 +365,8 @@ plot(Keq_array_hxk, Vmax_array, 'k-', 'LineWidth', 2)
 ax = gca;
 ax.FontSize = 12; 
 xlabel('pH-independent K_{eq}','FontSize',12)
-ylabel('Enzyme capacity','FontSize',12)
+% ylabel('Enzyme capacity','FontSize',12)
+ylabel({'Enzyme capacity';'(\mumol.min^{-1}.mg protein^{-1})'},'FontSize',12)
 % 
 set(1001,'color','w')
 
@@ -373,12 +375,12 @@ set(1001,'color','w')
 spA = subplot(2,3,[1 2 4 5]);
     % axes and tick labels
     xlim([6 8])
-    ylim([0 0.8])
+    ylim([0 0.85])
     xticks([6 6.5 7 7.5 8])
     yticks([0 0.2 0.4 0.6 0.8])
 spB = subplot(2,3,3);
     % axes and tick labels
-    set(gca, 'YAxisLocation', 'right')
+%     set(gca, 'YAxisLocation', 'right')
     xlim([0 300])
     ylim([0.05 0.15])
     xticks([0 100 200 300])
@@ -386,9 +388,12 @@ spB = subplot(2,3,3);
 spC = subplot(2,3,6);
     hold on
     % axes and tick labels
-    set(gca, 'YAxisLocation', 'right')
+%     set(gca, 'YAxisLocation', 'right')
+    ylim([0.42 0.52])
     xlim([0 8000])
     yticks([0.44 0.46 0.48 0.50])
+    xticks([0 2000 4000 6000 8000])
+    xticklabels({'0','2E3','4E3','6E3','8E3'})
 
 
 %%
@@ -430,7 +435,12 @@ hL2 = legend(spB.Children([2 3 4]), 'Exp.data','pH-dep. K_{eq}', 'pH-indep. K_{e
 hL2.Orientation = 'vertical';
 hL2.Box = 'off';
 hL2.FontSize = 9;
-hL2.Position = [0.63    0.645    0.3960    0.0340];
+% hL2.Position = [0.63    0.645    0.3960    0.0340];
+hL2.Position = [0.685    0.645    0.3960    0.0340];
+% 
+spA.Position = [0.1300 0.1100 0.4942 0.8150];
+spB.Position = [0.7500 0.5961 0.2100 0.3289];
+spC.Position = [0.7500 0.1223 0.2100 0.3289];
 
 %
 %%
@@ -445,6 +455,6 @@ if setup.saveOutput == 1
         'PaperSize',[screenposition(3:4)]);
     print -dpdf -painters hexokinase
 end
-
+% toc
 
 

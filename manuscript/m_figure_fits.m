@@ -1,4 +1,5 @@
 % % M_FIGURE_FITS.M
+% tic
 plotAllDFs = 1; % plots all dilution factors
 % plotAllDFs = 0; % plots only DF1
 % 
@@ -126,7 +127,7 @@ for i = [7 8 9]
     if i2 == 1
         hyl = ylabel('ENO','FontSize',12);
         text(7, 2 + (2 - 0) * 0.5, {'Enzyme capacity vs pH'; ...
-            '(\mumol min^{-1} mg protein^{-1})'}, ...
+            '(\mumol.min^{-1}.mg protein^{-1})'}, ...
             'FontSize', 12, ...
             'HorizontalAlignment', 'center')
     elseif i2 == 4
@@ -262,6 +263,7 @@ for recallENOstart = 1
     idxs2consider = ones(size(DF));
 
     % Experimental rates determination and plotting
+    setup.plotOutput = 0;
     expRatesDetermination;
 
     % %% (1.1) Simple parameter fit. Parameter estimation
@@ -306,7 +308,7 @@ for recallENOstart = 1
         1E5, 2E5, 5E5,...
         ];
 end
-loadName = ['results/',setup.enzymeName,'/',setup.enzymeName, '_regularizationResults.mat'];
+loadName = [setup.enzymeName, '_regularizationResults.mat'];
 load(loadName);
 selLambdaPos = 1; %12;
 
@@ -546,7 +548,7 @@ for recallGAPDHrevstart = 1
         1E5, 2E5, 5E5,...
         ];
 end
-loadName = ['results/',setup.enzymeName,'/',setup.enzymeName, '_regularizationResults.mat'];
+loadName = [setup.enzymeName, '_regularizationResults.mat'];
 load(loadName);
 selLambdaPos = 1; %12;
 %% Simulation estimated parameters
@@ -591,6 +593,7 @@ setup.simAllProfiles = 0;
 
 
 %% PART 4. data PGM
+safecopy_setup = setup;
 clear setup
 for recallPGMstart = 1
     for step0 = 1
@@ -760,6 +763,7 @@ for recallPGMstart = 1
                     0 0 1 1];
 
     % Experimental rates determination and plotting
+    setup.plotOutput = 0;
     expRatesDetermination;
 
     % %% (1.1) Simple parameter fit. Parameter estimation
@@ -803,7 +807,7 @@ for recallPGMstart = 1
         1E5, 2E5, 5E5,...
         ];
 end
-loadName = ['results/',setup.enzymeName,'/',setup.enzymeName, '_regularizationResults.mat'];
+loadName = [setup.enzymeName, '_regularizationResults.mat'];
 load(loadName);
 selLambdaPos = 16; %1; %12;
 
@@ -858,7 +862,8 @@ setup.simAllProfiles = 0;
 
 % last edits
 % set size
-set(1000, 'Position', [100 100 750 750])
+% set(1000, 'Position', [100 100 750 750])
+set(1000, 'Position', [-1500 -150 750 750])
 
 % size plots re organization
 hfig = get(1000,'Children');
@@ -918,14 +923,14 @@ hL3.Position = [0.5    0.02    0.3960    0.0340];
 %% some points from the latest round of comments
 % Changing a bit string names
 % 
-mainFig.Children(2).Children(5).String = '[NADH] s^{-1}, pH 7.06';
-mainFig.Children(4).Children(5).String = '[NADH] s^{-1}, pH 7.06';
+mainFig.Children(2).Children(5).String = '[NADH] . s^{-1}, pH 7.06';
+mainFig.Children(4).Children(5).String = '[NADH] . s^{-1}, pH 7.06';
 mainFig.Children(5).Children(5).String = '[NADH], pH 7.06';
 % 
-mainFig.Children(6).Children(9).String = '[NADH] s^{-1}, pH 6.60';
+mainFig.Children(6).Children(9).String = '[NADH] . s^{-1}, pH 6.60';
 mainFig.Children(7).Children(9).String = '[NADH], pH 6.60';
 % 
-mainFig.Children(8).Children(10).String = '[PEP] s^{-1}, pH 7.90';
+mainFig.Children(8).Children(10).String = '[PEP] . s^{-1}, pH 7.90';
 mainFig.Children(9).Children(10).String = '[PEP], pH 7.90';
 
 
@@ -938,6 +943,7 @@ temp = annotation('textbox',dim,'String',str,'FitBoxToText','on',...
 
 %% needed stop not to get truncated... #matlabUselessSecrets
 % save
+setup = safecopy_setup ;
 if setup.saveOutput == 1
     savefig(1000,'pHmanus_fits')
     % specs printing (method 3)
@@ -948,7 +954,7 @@ if setup.saveOutput == 1
         'PaperSize',[screenposition(3:4)]);
     print -dpdf -painters fits
 end
-
+% toc
 
 
 

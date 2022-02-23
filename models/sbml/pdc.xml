@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sbml xmlns="http://www.sbml.org/sbml/level3/version1/core" level="3" version="1">
+  <model metaid="feedback" id="feedback">
+    <listOfCompartments>
+      <compartment sboTerm="SBO:0000410" id="default_compartment" spatialDimensions="3" size="1" constant="true"/>
+    </listOfCompartments>
+    <listOfSpecies>
+      <species id="PYR" compartment="default_compartment" initialConcentration="50" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="CO2" compartment="default_compartment" initialConcentration="0" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="AcAld" compartment="default_compartment" initialConcentration="0" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="NADH" compartment="default_compartment" initialConcentration="0.0823" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="ETOH" compartment="default_compartment" initialConcentration="0" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="NAD" compartment="default_compartment" initialConcentration="0" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+    </listOfSpecies>
+    <listOfParameters>
+      <parameter id="p_PDC1_vm" value="0.00077593" constant="true"/>
+      <parameter id="p_PDC1_Kpyr" value="8.2185" constant="true"/>
+      <parameter id="p_PDC1_hill" value="2.0231" constant="true"/>
+      <parameter id="p_ADH_Vm" value="21.7742" constant="true"/>
+      <parameter id="p_ADH_Keq" value="769.2308" constant="true"/>
+    </listOfParameters>
+    <listOfReactions>
+      <reaction id="vPDC" reversible="true" fast="false">
+        <listOfReactants>
+          <speciesReference species="PYR" stoichiometry="1" constant="true"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="CO2" stoichiometry="1" constant="true"/>
+          <speciesReference species="AcAld" stoichiometry="1" constant="true"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <divide/>
+              <apply>
+                <times/>
+                <ci> p_PDC1_vm </ci>
+                <apply>
+                  <power/>
+                  <apply>
+                    <divide/>
+                    <ci> PYR </ci>
+                    <ci> p_PDC1_Kpyr </ci>
+                  </apply>
+                  <ci> p_PDC1_hill </ci>
+                </apply>
+              </apply>
+              <apply>
+                <plus/>
+                <cn type="integer"> 1 </cn>
+                <apply>
+                  <power/>
+                  <apply>
+                    <divide/>
+                    <ci> PYR </ci>
+                    <ci> p_PDC1_Kpyr </ci>
+                  </apply>
+                  <ci> p_PDC1_hill </ci>
+                </apply>
+              </apply>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+      <reaction id="vADH" reversible="true" fast="false">
+        <listOfReactants>
+          <speciesReference species="AcAld" stoichiometry="1" constant="true"/>
+          <speciesReference species="NADH" stoichiometry="1" constant="true"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="ETOH" stoichiometry="1" constant="true"/>
+          <speciesReference species="NAD" stoichiometry="1" constant="true"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> p_ADH_Vm </ci>
+              <apply>
+                <minus/>
+                <apply>
+                  <times/>
+                  <ci> AcAld </ci>
+                  <ci> NADH </ci>
+                </apply>
+                <apply>
+                  <divide/>
+                  <apply>
+                    <times/>
+                    <ci> ETOH </ci>
+                    <ci> NAD </ci>
+                  </apply>
+                  <ci> p_ADH_Keq </ci>
+                </apply>
+              </apply>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+    </listOfReactions>
+  </model>
+</sbml>

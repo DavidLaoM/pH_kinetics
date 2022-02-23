@@ -18,10 +18,10 @@
 close all
 dbstop if error
 set_paths_pHstudy;
-setup.plotOutput = 1;
+setup.plotOutput = 0;
     % 0: do not show any plot
     % 1: show plots of the imported data
-setup.saveOutput = 1;
+setup.saveOutput = 0;
     % 0: do not save plots
     % 1: asve plots in 'data/processed_data' folder ('setup.plotOutput' must be equal to 1).
 % select which cases to estimate parameters

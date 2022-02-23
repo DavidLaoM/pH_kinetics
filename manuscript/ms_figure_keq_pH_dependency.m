@@ -1021,9 +1021,9 @@ if setup.fast_option == 0
 
     % %% (4/4) recall PYK
     for tempRecall = 1
-        clear, close all
-        set_paths_pHstudy;
-        dbstop if error
+%         clear, close all
+%         set_paths_pHstudy;
+%         dbstop if error
         for step0 = 1
             % select specific case and recall data
             setup.caseStudyALD = 0;

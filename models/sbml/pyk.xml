@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sbml xmlns="http://www.sbml.org/sbml/level3/version1/core" level="3" version="1">
+  <model metaid="feedback" id="feedback">
+    <listOfCompartments>
+      <compartment sboTerm="SBO:0000410" id="default_compartment" spatialDimensions="3" size="1" constant="true"/>
+    </listOfCompartments>
+    <listOfSpecies>
+      <species id="ADP" compartment="default_compartment" initialConcentration="10" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="PEP" compartment="default_compartment" initialConcentration="2" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="ATP" compartment="default_compartment" initialConcentration="0" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="PYR" compartment="default_compartment" initialConcentration="0" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="NADH" compartment="default_compartment" initialConcentration="0.0655" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="NAD" compartment="default_compartment" initialConcentration="0" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="LAC" compartment="default_compartment" initialConcentration="0" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+    </listOfSpecies>
+    <listOfParameters>
+      <parameter id="p_PYK1_Vm" value="0.0011" constant="true"/>
+      <parameter id="p_PYK1_Kadp" value="0.2165" constant="true"/>
+      <parameter id="p_PYK1_Kpep" value="0.2523" constant="true"/>
+      <parameter id="p_PYK1_hill" value="4.2326" constant="true"/>
+      <parameter id="p_PYK1_L" value="56592" constant="true"/>
+      <parameter id="p_PYK1_Katp" value="17.0475" constant="true"/>
+      <parameter id="FBP" value="1" constant="true"/>
+      <parameter id="p_PYK1_Kf16bp" value="0.1892" constant="true"/>
+      <parameter id="p_LDH1_Vm" value="21.7742" constant="true"/>
+      <parameter id="p_LDH1_Keq" value="8333.3" constant="true"/>
+      <parameter id="p_PYK1_Keq" value="10417" constant="true"/>
+    </listOfParameters>
+    <listOfReactions>
+      <reaction id="vPYK" reversible="true" fast="false">
+        <listOfReactants>
+          <speciesReference species="ADP" stoichiometry="1" constant="true"/>
+          <speciesReference species="PEP" stoichiometry="1" constant="true"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="ATP" stoichiometry="1" constant="true"/>
+          <speciesReference species="PYR" stoichiometry="1" constant="true"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <apply>
+                <divide/>
+                <apply>
+                  <times/>
+                  <apply>
+                    <divide/>
+                    <ci> p_PYK1_Vm </ci>
+                    <apply>
+                      <times/>
+                      <ci> p_PYK1_Kadp </ci>
+                      <ci> p_PYK1_Kpep </ci>
+                    </apply>
+                  </apply>
+                  <ci> ADP </ci>
+                  <ci> PEP </ci>
+                </apply>
+                <apply>
+                  <times/>
+                  <apply>
+                    <plus/>
+                    <cn type="integer"> 1 </cn>
+                    <apply>
+                      <divide/>
+                      <ci> ADP </ci>
+                      <ci> p_PYK1_Kadp </ci>
+                    </apply>
+                  </apply>
+                  <apply>
+                    <plus/>
+                    <cn type="integer"> 1 </cn>
+                    <apply>
+                      <divide/>
+                      <ci> PEP </ci>
+                      <ci> p_PYK1_Kpep </ci>
+                    </apply>
+                  </apply>
+                </apply>
+              </apply>
+              <apply>
+                <divide/>
+                <apply>
+                  <power/>
+                  <apply>
+                    <plus/>
+                    <apply>
+                      <divide/>
+                      <ci> PEP </ci>
+                      <ci> p_PYK1_Kpep </ci>
+                    </apply>
+                    <cn type="integer"> 1 </cn>
+                  </apply>
+                  <ci> p_PYK1_hill </ci>
+                </apply>
+                <apply>
+                  <plus/>
+                  <apply>
+                    <times/>
+                    <ci> p_PYK1_L </ci>
+                    <apply>
+                      <power/>
+                      <apply>
+                        <divide/>
+                        <apply>
+                          <plus/>
+                          <apply>
+                            <divide/>
+                            <ci> ATP </ci>
+                            <ci> p_PYK1_Katp </ci>
+                          </apply>
+                          <cn type="integer"> 1 </cn>
+                        </apply>
+                        <apply>
+                          <plus/>
+                          <apply>
+                            <divide/>
+                            <ci> FBP </ci>
+                            <ci> p_PYK1_Kf16bp </ci>
+                          </apply>
+                          <cn type="integer"> 1 </cn>
+                        </apply>
+                      </apply>
+                      <ci> p_PYK1_hill </ci>
+                    </apply>
+                  </apply>
+                  <apply>
+                    <power/>
+                    <apply>
+                      <plus/>
+                      <apply>
+                        <divide/>
+                        <ci> PEP </ci>
+                        <ci> p_PYK1_Kpep </ci>
+                      </apply>
+                      <cn type="integer"> 1 </cn>
+                    </apply>
+                    <ci> p_PYK1_hill </ci>
+                  </apply>
+                </apply>
+              </apply>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+      <reaction id="vLDH" reversible="true" fast="false">
+        <listOfReactants>
+          <speciesReference species="NADH" stoichiometry="1" constant="true"/>
+          <speciesReference species="PYR" stoichiometry="1" constant="true"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="NAD" stoichiometry="1" constant="true"/>
+          <speciesReference species="LAC" stoichiometry="1" constant="true"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> p_LDH1_Vm </ci>
+              <apply>
+                <minus/>
+                <apply>
+                  <times/>
+                  <ci> PYR </ci>
+                  <ci> NADH </ci>
+                </apply>
+                <apply>
+                  <divide/>
+                  <apply>
+                    <times/>
+                    <ci> LAC </ci>
+                    <ci> NAD </ci>
+                  </apply>
+                  <ci> p_LDH1_Keq </ci>
+                </apply>
+              </apply>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+    </listOfReactions>
+  </model>
+</sbml>

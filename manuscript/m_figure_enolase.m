@@ -249,7 +249,8 @@ if setup.fast_option == 0
     res_Km_pHdependent.Jacobian = Jacobian_varKm;
     res_Km_pHdependent.error_varKm = error_varKm;
     res_Km_pHdependent.sum_error_varKm = sum_error_varKm;
-
+    
+    close all
 elseif setup.fast_option == 1 % directly recall the workspace from here
     load('workspace_enolase.mat');
 end
@@ -278,24 +279,24 @@ setup.fixedValues = data.Vmax2(numInter,:);
 [error_var_km,simResult_var_km] = simRes_costfun_Vmfixed(xres_varKm{numInter},data,setup);
 
 
-% %%
-figure(102),
-    
-sp2 = subplot(122); 
-    plot(res_Km_pHdependent.sum_error_varKm(1:40),'.-','Color',[1 0.5 0.5]),
-    xlabel('sample number'), ylabel('error'),
-    title({'focused view';'(first 40 sample)'}),
-    hold on, line(sp2.XLim,ones(1,2)*mean(res_VmKm_pHdependent.sum_error_varVmKm),'LineStyle','--','color',[0.9 0.9 0.9])
-    hold on, line(sp2.XLim,ones(1,2)*mean(res_Vm_pHdependent.sum_error_varVm),'LineStyle','--','color',[0.5 0.5 1])
-    
-subplot(121), 
-    area(sp2.XLim,ones(1,2)*sp2.YLim(2),'FaceColor',[0.95 0.95 0.95])
-    hold on
-    plot(res_Km_pHdependent.sum_error_varKm,'.-','Color',[1 0.5 0.5]),
-    xlabel('sample number'), ylabel('error'),
-    title('general view'),
-    
-set(gcf,'color','w');
+% % %%
+% figure(102),
+%     
+% sp2 = subplot(122); 
+%     plot(res_Km_pHdependent.sum_error_varKm(1:40),'.-','Color',[1 0.5 0.5]),
+%     xlabel('sample number'), ylabel('error'),
+%     title({'focused view';'(first 40 sample)'}),
+%     hold on, line(sp2.XLim,ones(1,2)*mean(res_VmKm_pHdependent.sum_error_varVmKm),'LineStyle','--','color',[0.9 0.9 0.9])
+%     hold on, line(sp2.XLim,ones(1,2)*mean(res_Vm_pHdependent.sum_error_varVm),'LineStyle','--','color',[0.5 0.5 1])
+%     
+% subplot(121), 
+%     area(sp2.XLim,ones(1,2)*sp2.YLim(2),'FaceColor',[0.95 0.95 0.95])
+%     hold on
+%     plot(res_Km_pHdependent.sum_error_varKm,'.-','Color',[1 0.5 0.5]),
+%     xlabel('sample number'), ylabel('error'),
+%     title('general view'),
+%     
+% set(gcf,'color','w');
 
 %% create the figure
 
@@ -338,7 +339,8 @@ hb.CData = [c_midnightblue; c_chocolate];
 hb.EdgeColor = 'none';
 set(gca, 'FontSize',14*resizeVal,'XTick',[1 2],'XTickLabel',{'V_{max}','K_{m}'});
 fix_xticklabels(gca,0.1,{'FontSize',14*resizeVal});
-ylabel({'Error (mM)';'simulation - experimental'}, 'FontSize',18*resizeVal)%12)
+% ylabel({'Error (mM)';'simulation - experimental'}, 'FontSize',18*resizeVal)%12)
+ylabel({'Error simulation - experimental (mM)'}, 'FontSize',18*resizeVal)%12)
 errbar = [std(x2); std(x3(1:40))];   % CREATE ‘errbar’ MATRIX
 yd = [mean(x2) mean(x3(1:40))]';
 hold on
@@ -373,7 +375,7 @@ for j = 1:12
         text(30, 1.2*0.9, tempText,'FontSize',14 * resizeVal)
     end
     if j == 9
-        xlab = xlabel('assay time (s)','FontSize',18 * resizeVal);
+        xlab = xlabel('Assay time (s)','FontSize',18 * resizeVal);
         xlab.Position = xlab.Position + [0 0 0];
         ylab = ylabel('PEP concentration (mM)','FontSize',18 * resizeVal);
         ylab.Position = ylab.Position + [0 1.5 0];
@@ -386,6 +388,7 @@ end
 hold off
 set(gcf,'color','w');
 set(101, 'Position', [100 100 900 900])
+% set(101, 'Position', [-1500 -150 900 900])
 
 % edits for the boxes and labels A and B
 sp1_h.Position = sp1_h.Position + [0 0.025 0 0]; % bit up with A
@@ -398,7 +401,7 @@ hold off
 %% latest additions
 sp_temp = h101.Children(2);
 hL1 = legend(sp_temp.Children([4 3 2]),'pH-dependent V_{max}',...
-    'pH-dependent K_{m}','experimental data');
+    'pH-dependent K_{m}','Experimental data');
 hL1.Orientation = 'horizontal';
 hL1.Box = 'off';
 hL1.FontSize = 10;

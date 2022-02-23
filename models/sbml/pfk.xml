@@ -1,0 +1,354 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sbml xmlns="http://www.sbml.org/sbml/level3/version1/core" level="3" version="1">
+  <model metaid="feedback" id="feedback">
+    <listOfCompartments>
+      <compartment sboTerm="SBO:0000410" id="default_compartment" spatialDimensions="3" size="1" constant="true"/>
+    </listOfCompartments>
+    <listOfSpecies>
+      <species id="F6P" compartment="default_compartment" initialConcentration="10" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="ATP" compartment="default_compartment" initialConcentration="0.5" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="FBP" compartment="default_compartment" initialConcentration="0" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="ADP" compartment="default_compartment" initialConcentration="0" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="DHAP" compartment="default_compartment" initialConcentration="0" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="GAP" compartment="default_compartment" initialConcentration="0" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="NADH" compartment="default_compartment" initialConcentration="0.0899" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="G3P" compartment="default_compartment" initialConcentration="0" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="NAD" compartment="default_compartment" initialConcentration="0" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+    </listOfSpecies>
+    <listOfParameters>
+      <parameter id="p_PFK_Vm" value="4.2029e-05" constant="true"/>
+      <parameter id="p_PFK_gR" value="20.0132" constant="true"/>
+      <parameter id="p_PFK_Kf6p" value="0.0702" constant="true"/>
+      <parameter id="p_PFK_Katp" value="0.1607" constant="true"/>
+      <parameter id="p_PFK_L" value="0.6246" constant="true"/>
+      <parameter id="p_PFK_Ciatp" value="51.2436" constant="true"/>
+      <parameter id="p_PFK_Kiatp" value="0.9815" constant="true"/>
+      <parameter id="p_PFK_Camp" value="0.0845" constant="true"/>
+      <parameter id="AMP" value="0" constant="true"/>
+      <parameter id="p_PFK_Kamp" value="0.095" constant="true"/>
+      <parameter id="p_PFK_Cf26bp" value="0.0155" constant="true"/>
+      <parameter id="F26BP" value="0.001" constant="true"/>
+      <parameter id="p_PFK_Kf26bp" value="0.0013" constant="true"/>
+      <parameter id="p_PFK_Cf16bp" value="0.3604" constant="true"/>
+      <parameter id="p_PFK_Kf16bp" value="0.0949" constant="true"/>
+      <parameter id="p_PFK_Catp" value="15.0631" constant="true"/>
+      <parameter id="p_FBA1_Vm" value="21.7742" constant="true"/>
+      <parameter id="p_FBA1_Keq" value="0.00065" constant="true"/>
+      <parameter id="p_GPD1_Vm" value="21.7742" constant="true"/>
+      <parameter id="p_GPD1_Keq" value="5000" constant="true"/>
+      <parameter id="p_TPI1_Vm" value="21.7742" constant="true"/>
+      <parameter id="p_TPI1_Keq" value="0.1066" constant="true"/>
+      <parameter id="p_PFK_F26BP" value="0.001" constant="true"/>
+      <parameter id="p_PFK_Keq" value="977" constant="true"/>
+    </listOfParameters>
+    <listOfReactions>
+      <reaction id="v_PFK" reversible="true" fast="false">
+        <listOfReactants>
+          <speciesReference species="F6P" stoichiometry="1" constant="true"/>
+          <speciesReference species="ATP" stoichiometry="1" constant="true"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="FBP" stoichiometry="1" constant="true"/>
+          <speciesReference species="ADP" stoichiometry="1" constant="true"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <divide/>
+              <apply>
+                <times/>
+                <ci> p_PFK_Vm </ci>
+                <ci> p_PFK_gR </ci>
+                <apply>
+                  <divide/>
+                  <ci> F6P </ci>
+                  <ci> p_PFK_Kf6p </ci>
+                </apply>
+                <apply>
+                  <divide/>
+                  <ci> ATP </ci>
+                  <ci> p_PFK_Katp </ci>
+                </apply>
+                <apply>
+                  <plus/>
+                  <cn type="integer"> 1 </cn>
+                  <apply>
+                    <divide/>
+                    <ci> F6P </ci>
+                    <ci> p_PFK_Kf6p </ci>
+                  </apply>
+                  <apply>
+                    <divide/>
+                    <ci> ATP </ci>
+                    <ci> p_PFK_Katp </ci>
+                  </apply>
+                  <apply>
+                    <times/>
+                    <ci> p_PFK_gR </ci>
+                    <apply>
+                      <divide/>
+                      <ci> F6P </ci>
+                      <ci> p_PFK_Kf6p </ci>
+                    </apply>
+                    <apply>
+                      <divide/>
+                      <ci> ATP </ci>
+                      <ci> p_PFK_Katp </ci>
+                    </apply>
+                  </apply>
+                </apply>
+              </apply>
+              <apply>
+                <plus/>
+                <apply>
+                  <power/>
+                  <apply>
+                    <plus/>
+                    <cn type="integer"> 1 </cn>
+                    <apply>
+                      <divide/>
+                      <ci> F6P </ci>
+                      <ci> p_PFK_Kf6p </ci>
+                    </apply>
+                    <apply>
+                      <divide/>
+                      <ci> ATP </ci>
+                      <ci> p_PFK_Katp </ci>
+                    </apply>
+                    <apply>
+                      <times/>
+                      <ci> p_PFK_gR </ci>
+                      <apply>
+                        <divide/>
+                        <ci> F6P </ci>
+                        <ci> p_PFK_Kf6p </ci>
+                      </apply>
+                      <apply>
+                        <divide/>
+                        <ci> ATP </ci>
+                        <ci> p_PFK_Katp </ci>
+                      </apply>
+                    </apply>
+                  </apply>
+                  <cn type="integer"> 2 </cn>
+                </apply>
+                <apply>
+                  <times/>
+                  <ci> p_PFK_L </ci>
+                  <apply>
+                    <power/>
+                    <apply>
+                      <divide/>
+                      <apply>
+                        <plus/>
+                        <cn type="integer"> 1 </cn>
+                        <apply>
+                          <times/>
+                          <ci> p_PFK_Ciatp </ci>
+                          <apply>
+                            <divide/>
+                            <ci> ATP </ci>
+                            <ci> p_PFK_Kiatp </ci>
+                          </apply>
+                        </apply>
+                      </apply>
+                      <apply>
+                        <plus/>
+                        <cn type="integer"> 1 </cn>
+                        <apply>
+                          <divide/>
+                          <ci> ATP </ci>
+                          <ci> p_PFK_Kiatp </ci>
+                        </apply>
+                      </apply>
+                    </apply>
+                    <cn type="integer"> 2 </cn>
+                  </apply>
+                  <apply>
+                    <power/>
+                    <apply>
+                      <divide/>
+                      <apply>
+                        <plus/>
+                        <cn type="integer"> 1 </cn>
+                        <apply>
+                          <times/>
+                          <ci> p_PFK_Camp </ci>
+                          <apply>
+                            <divide/>
+                            <ci> AMP </ci>
+                            <ci> p_PFK_Kamp </ci>
+                          </apply>
+                        </apply>
+                      </apply>
+                      <apply>
+                        <plus/>
+                        <cn type="integer"> 1 </cn>
+                        <apply>
+                          <divide/>
+                          <ci> AMP </ci>
+                          <ci> p_PFK_Kamp </ci>
+                        </apply>
+                      </apply>
+                    </apply>
+                    <cn type="integer"> 2 </cn>
+                  </apply>
+                  <apply>
+                    <power/>
+                    <apply>
+                      <divide/>
+                      <apply>
+                        <plus/>
+                        <cn type="integer"> 1 </cn>
+                        <apply>
+                          <divide/>
+                          <apply>
+                            <times/>
+                            <ci> p_PFK_Cf26bp </ci>
+                            <ci> F26BP </ci>
+                          </apply>
+                          <ci> p_PFK_Kf26bp </ci>
+                        </apply>
+                        <apply>
+                          <divide/>
+                          <apply>
+                            <times/>
+                            <ci> p_PFK_Cf16bp </ci>
+                            <ci> FBP </ci>
+                          </apply>
+                          <ci> p_PFK_Kf16bp </ci>
+                        </apply>
+                      </apply>
+                      <apply>
+                        <plus/>
+                        <cn type="integer"> 1 </cn>
+                        <apply>
+                          <divide/>
+                          <ci> F26BP </ci>
+                          <ci> p_PFK_Kf26bp </ci>
+                        </apply>
+                        <apply>
+                          <divide/>
+                          <ci> FBP </ci>
+                          <ci> p_PFK_Kf16bp </ci>
+                        </apply>
+                      </apply>
+                    </apply>
+                    <cn type="integer"> 2 </cn>
+                  </apply>
+                  <apply>
+                    <power/>
+                    <apply>
+                      <plus/>
+                      <cn type="integer"> 1 </cn>
+                      <apply>
+                        <times/>
+                        <ci> p_PFK_Catp </ci>
+                        <apply>
+                          <divide/>
+                          <ci> ATP </ci>
+                          <ci> p_PFK_Katp </ci>
+                        </apply>
+                      </apply>
+                    </apply>
+                    <cn type="integer"> 2 </cn>
+                  </apply>
+                </apply>
+              </apply>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+      <reaction id="v_ALD" reversible="true" fast="false">
+        <listOfReactants>
+          <speciesReference species="FBP" stoichiometry="1" constant="true"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="DHAP" stoichiometry="1" constant="true"/>
+          <speciesReference species="GAP" stoichiometry="1" constant="true"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> p_FBA1_Vm </ci>
+              <apply>
+                <minus/>
+                <ci> FBP </ci>
+                <apply>
+                  <divide/>
+                  <apply>
+                    <times/>
+                    <ci> GAP </ci>
+                    <ci> DHAP </ci>
+                  </apply>
+                  <ci> p_FBA1_Keq </ci>
+                </apply>
+              </apply>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+      <reaction id="v_GPD" reversible="true" fast="false">
+        <listOfReactants>
+          <speciesReference species="DHAP" stoichiometry="1" constant="true"/>
+          <speciesReference species="NADH" stoichiometry="1" constant="true"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="G3P" stoichiometry="1" constant="true"/>
+          <speciesReference species="NAD" stoichiometry="1" constant="true"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> p_GPD1_Vm </ci>
+              <apply>
+                <minus/>
+                <apply>
+                  <times/>
+                  <ci> DHAP </ci>
+                  <ci> NADH </ci>
+                </apply>
+                <apply>
+                  <divide/>
+                  <apply>
+                    <times/>
+                    <ci> G3P </ci>
+                    <ci> NAD </ci>
+                  </apply>
+                  <ci> p_GPD1_Keq </ci>
+                </apply>
+              </apply>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+      <reaction id="v_TPI" reversible="true" fast="false">
+        <listOfReactants>
+          <speciesReference species="DHAP" stoichiometry="1" constant="true"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="GAP" stoichiometry="1" constant="true"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> p_TPI1_Vm </ci>
+              <apply>
+                <minus/>
+                <ci> DHAP </ci>
+                <apply>
+                  <divide/>
+                  <ci> GAP </ci>
+                  <ci> p_TPI1_Keq </ci>
+                </apply>
+              </apply>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+    </listOfReactions>
+  </model>
+</sbml>

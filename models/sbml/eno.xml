@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sbml xmlns="http://www.sbml.org/sbml/level3/version1/core" level="3" version="1">
+  <model metaid="feedback" id="feedback">
+    <listOfCompartments>
+      <compartment sboTerm="SBO:0000410" id="default_compartment" spatialDimensions="3" size="1" constant="true"/>
+    </listOfCompartments>
+    <listOfSpecies>
+      <species id="P2G" compartment="default_compartment" initialConcentration="6" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="PEP" compartment="default_compartment" initialConcentration="0.4975" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+    </listOfSpecies>
+    <listOfParameters>
+      <parameter id="p_ENO1_vm" value="0.0011" constant="true"/>
+      <parameter id="p_ENO1_K2pg" value="0.00067187" constant="true"/>
+      <parameter id="p_ENO1_Keq" value="5.19" constant="true"/>
+      <parameter id="p_ENO1_Kpep" value="64.585" constant="true"/>
+    </listOfParameters>
+    <listOfReactions>
+      <reaction id="vENO" reversible="true" fast="false">
+        <listOfReactants>
+          <speciesReference species="P2G" stoichiometry="1" constant="true"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="PEP" stoichiometry="1" constant="true"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <divide/>
+              <apply>
+                <times/>
+                <apply>
+                  <divide/>
+                  <ci> p_ENO1_vm </ci>
+                  <ci> p_ENO1_K2pg </ci>
+                </apply>
+                <apply>
+                  <minus/>
+                  <ci> P2G </ci>
+                  <apply>
+                    <divide/>
+                    <ci> PEP </ci>
+                    <ci> p_ENO1_Keq </ci>
+                  </apply>
+                </apply>
+              </apply>
+              <apply>
+                <plus/>
+                <cn type="integer"> 1 </cn>
+                <apply>
+                  <divide/>
+                  <ci> P2G </ci>
+                  <ci> p_ENO1_K2pg </ci>
+                </apply>
+                <apply>
+                  <divide/>
+                  <ci> PEP </ci>
+                  <ci> p_ENO1_Kpep </ci>
+                </apply>
+              </apply>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+    </listOfReactions>
+  </model>
+</sbml>

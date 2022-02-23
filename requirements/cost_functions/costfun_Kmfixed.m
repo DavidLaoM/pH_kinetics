@@ -220,7 +220,6 @@ switch enzyme
                 data.Vprofs = data.RRs(j,:);
                 data.tempTime = data.time(j,:);                
                 data.i = j;
-                
                 % simulate metabolites
                 [simResult] = simSys(xassay,data,setup);
                 % calculation of reaction rates
@@ -598,7 +597,6 @@ switch enzyme
                 data.Vprofs = data.RRs(j,:);
                 data.tempTime = data.time(j,:);                
                 data.i = j;
-                
                 % simulate metabolites
                 [simResult] = simSys(xassay,data,setup);
                 % calculation of reaction rates
@@ -985,7 +983,6 @@ switch enzyme
 %                 data.Vprofs = data.RRs(j,:);
 %                 data.tempTime = data.time(j,:);                
 %                 data.i = j;
-                
                 % simulate metabolites
                 [simResult] = simSys(xassay,data,setup); % simRes{i,j} = simResult;
                 % calculation of reaction rates
@@ -1306,7 +1303,6 @@ switch enzyme
 %                 data.Vprofs = data.RRs(j,:);
 %                 data.tempTime = data.time(j,:);                
 %                 data.i = j;
-                
                 % simulate metabolites
                 [simResult] = simSys(xassay,data,setup); % simRes{i,j} = simResult;
                 % calculation of reaction rates
@@ -1604,7 +1600,6 @@ switch enzyme
 %                 data.Vprofs = data.RRs(j,:);
 %                 data.tempTime = data.time(j,:);                
 %                 data.i = j;
-                
                 % simulate metabolites
                 [simResult] = simSys(xassay,data,setup); % simRes{i,j} = simResult;
                 % calculation of reaction rates
@@ -1982,9 +1977,8 @@ switch enzyme
                 % recall vmax for the specific value and simulate
                 data.chosenDF = data.DF(j,i);
                 data.chosenVmax = data.Vmaxs(1,4)/data.chosenDF; % vmax from the highest DF is taken and then divided
-                data.chosenNADHini = data.NADH{i}(1);                
+                data.chosenNADHini = data.NADH{i}(1);  
                 % simulate metabolites
-% % % %                 disp(j);
                 [simResult] = simSys(xassay,data,setup); % simRes{i,j} = simResult;
                 % calculation of reaction rates
                 [vObs,~] = calcRates(xassay,simResult,data,setup);   
@@ -2308,7 +2302,7 @@ switch enzyme
                 % recall vmax for the specific value and simulate
                 data.chosenDF = data.DF(j,i);
                 data.chosenVmax = data.Vmaxs(1,4)/data.chosenDF; % vmax from the highest DF is taken and then divided
-                data.chosenNADHini = data.NADH{i}(1);                
+                data.chosenNADHini = data.NADH{i}(1);   
                 % simulate metabolites
                 [simResult] = simSys(xassay,data,setup); % simRes{i,j} = simResult;
                 % calculation of reaction rates
@@ -2625,7 +2619,7 @@ switch enzyme
                 % recall vmax for the specific value and simulate
                 data.chosenDF = data.DF(j,i);
                 data.chosenVmax = data.Vmaxs(1,4)/data.chosenDF; % vmax from the highest DF is taken and then divided
-                data.chosenNADHini = data.NADH{i}(1);                
+                data.chosenNADHini = data.NADH{i}(1);  
                 % simulate metabolites
                 [simResult] = simSys(xassay,data,setup); % simRes{i,j} = simResult;
                 % calculation of reaction rates
@@ -2911,7 +2905,7 @@ switch enzyme
                 % recall vmax for the specific value and simulate
                 data.chosenDF = data.DF(j,i);
                 data.chosenVmax = data.Vmaxs(1,4)/data.chosenDF; % vmax from the highest DF is taken and then divided
-                data.chosenNADHini = data.NADH{i}(1);                
+                data.chosenNADHini = data.NADH{i}(1);  
                 % simulate metabolites
                 [simResult] = simSys(xassay,data,setup); % simRes{i,j} = simResult;
                 % calculation of reaction rates
@@ -3186,7 +3180,7 @@ switch enzyme
                 % recall vmax for the specific value and simulate
                 data.chosenDF = data.DF(j,i);
                 data.chosenVmax = data.Vmaxs(1,4)/data.chosenDF; % vmax from the highest DF is taken and then divided
-                data.chosenNADHini = data.NADH{i}(1);                
+                data.chosenNADHini = data.NADH{i}(1); 
                 % simulate metabolites
                 [simResult] = simSys(xassay,data,setup); % simRes{i,j} = simResult;
                 % calculation of reaction rates
@@ -3656,7 +3650,7 @@ switch enzyme
                 % recall vmax for the specific value and simulate
                 data.chosenDF = data.DF(j,i);
                 data.chosenVmax = data.Vmaxs(1,4)/data.chosenDF; % vmax from the highest DF is taken and then divided
-                data.chosenNADHini = data.NADH{i}(1);                
+                data.chosenNADHini = data.NADH{i}(1);  
                 % simulate metabolites
                 [simResult] = simSys(xassay,data,setup); % simRes{i,j} = simResult;
                 % calculation of reaction rates

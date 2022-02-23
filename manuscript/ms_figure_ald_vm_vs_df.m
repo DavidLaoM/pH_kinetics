@@ -82,14 +82,14 @@ for i = 1 %[1 2] %[3 4]
 %     fh1.Position = [fh1.Position(1) fh1.Position(2) 0.9*fh1.Position(3) 0.9*fh1.Position(4) ];
     fh1.Position = [0.025    0.075    0.6    0.8225]; % = [0.025    0.075    0.3    0.8225];
     
-    % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %     
-    % Saving: save them back to .png in location
-    savefig(1,'1appendix_ald_vm_dil');   
-    saveLoc = 'D:\OneDrive - TU Eindhoven\Documents\ch3_pHkinetics\results\manuscriptFigures\';
-    saveName_train_pdf = [saveLoc,'1appendix_ald_vm_dil.pdf'];
-    saveName_train_png = [saveLoc,'1appendix_ald_vm_dil.png'];
-    saveas(1,saveName_train_pdf);
-    saveas(1,saveName_train_png);
+%     % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %     
+%     % Saving: save them back to .png in location
+%     savefig(1,'1appendix_ald_vm_dil');   
+%     saveLoc = 'D:\OneDrive - TU Eindhoven\Documents\ch3_pHkinetics\results\manuscriptFigures\';
+%     saveName_train_pdf = [saveLoc,'1appendix_ald_vm_dil.pdf'];
+%     saveName_train_png = [saveLoc,'1appendix_ald_vm_dil.png'];
+%     saveas(1,saveName_train_pdf);
+%     saveas(1,saveName_train_png);
 
     % 
     if setup.saveOutput == 1

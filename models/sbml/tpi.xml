@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sbml xmlns="http://www.sbml.org/sbml/level3/version1/core" level="3" version="1">
+  <model metaid="feedback" id="feedback">
+    <listOfCompartments>
+      <compartment sboTerm="SBO:0000410" id="default_compartment" spatialDimensions="3" size="1" constant="true"/>
+    </listOfCompartments>
+    <listOfSpecies>
+      <species id="FBP" compartment="default_compartment" initialConcentration="0" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="GAP" compartment="default_compartment" initialConcentration="5.8" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="DHAP" compartment="default_compartment" initialConcentration="0" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="NADH" compartment="default_compartment" initialConcentration="0.066" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="G3P" compartment="default_compartment" initialConcentration="0" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="NAD" compartment="default_compartment" initialConcentration="0" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+    </listOfSpecies>
+    <listOfParameters>
+      <parameter id="p_GPD1_Vm" value="21.7742" constant="true"/>
+      <parameter id="p_GPD1_Keq" value="37037" constant="true"/>
+      <parameter id="p_TPI1_Vm" value="0.0013" constant="true"/>
+      <parameter id="p_TPI1_Kdhap" value="9.5624" constant="true"/>
+      <parameter id="p_TPI1_Keq" value="0.1092" constant="true"/>
+      <parameter id="p_TPI1_Kglyceral3p" value="5.2322" constant="true"/>
+    </listOfParameters>
+    <listOfReactions>
+      <reaction id="vALD" reversible="true" fast="false">
+        <listOfReactants>
+          <speciesReference species="FBP" stoichiometry="1" constant="true"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="GAP" stoichiometry="1" constant="true"/>
+          <speciesReference species="DHAP" stoichiometry="1" constant="true"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <cn type="integer"> 0 </cn>
+          </math>
+        </kineticLaw>
+      </reaction>
+      <reaction id="vGPD" reversible="true" fast="false">
+        <listOfReactants>
+          <speciesReference species="DHAP" stoichiometry="1" constant="true"/>
+          <speciesReference species="NADH" stoichiometry="1" constant="true"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="G3P" stoichiometry="1" constant="true"/>
+          <speciesReference species="NAD" stoichiometry="1" constant="true"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> p_GPD1_Vm </ci>
+              <apply>
+                <minus/>
+                <apply>
+                  <times/>
+                  <ci> DHAP </ci>
+                  <ci> NADH </ci>
+                </apply>
+                <apply>
+                  <divide/>
+                  <apply>
+                    <times/>
+                    <ci> G3P </ci>
+                    <ci> NAD </ci>
+                  </apply>
+                  <ci> p_GPD1_Keq </ci>
+                </apply>
+              </apply>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+      <reaction id="vTPI" reversible="true" fast="false">
+        <listOfReactants>
+          <speciesReference species="DHAP" stoichiometry="1" constant="true"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="GAP" stoichiometry="1" constant="true"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <divide/>
+              <apply>
+                <times/>
+                <apply>
+                  <divide/>
+                  <ci> p_TPI1_Vm </ci>
+                  <ci> p_TPI1_Kdhap </ci>
+                </apply>
+                <apply>
+                  <minus/>
+                  <ci> DHAP </ci>
+                  <apply>
+                    <divide/>
+                    <ci> GAP </ci>
+                    <ci> p_TPI1_Keq </ci>
+                  </apply>
+                </apply>
+              </apply>
+              <apply>
+                <plus/>
+                <cn type="integer"> 1 </cn>
+                <apply>
+                  <divide/>
+                  <ci> DHAP </ci>
+                  <ci> p_TPI1_Kdhap </ci>
+                </apply>
+                <apply>
+                  <divide/>
+                  <ci> GAP </ci>
+                  <ci> p_TPI1_Kglyceral3p </ci>
+                </apply>
+              </apply>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+    </listOfReactions>
+  </model>
+</sbml>

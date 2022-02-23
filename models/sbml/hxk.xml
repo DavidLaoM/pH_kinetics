@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sbml xmlns="http://www.sbml.org/sbml/level3/version1/core" level="3" version="1">
+  <model metaid="feedback" id="feedback">
+    <listOfCompartments>
+      <compartment sboTerm="SBO:0000410" id="default_compartment" spatialDimensions="3" size="1" constant="true"/>
+    </listOfCompartments>
+    <listOfSpecies>
+      <species id="GLCi" compartment="default_compartment" initialConcentration="10" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="ATP" compartment="default_compartment" initialConcentration="1" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="G6P" compartment="default_compartment" initialConcentration="0" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="ADP" compartment="default_compartment" initialConcentration="0" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="NADP" compartment="default_compartment" initialConcentration="1" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="PG6" compartment="default_compartment" initialConcentration="0" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="NADPH" compartment="default_compartment" initialConcentration="0.0636" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+    </listOfSpecies>
+    <listOfParameters>
+      <parameter id="p_HXK1_Vm" value="0.00026921" constant="true"/>
+      <parameter id="p_HXK1_Keq" value="7000" constant="true"/>
+      <parameter id="p_HXK1_Katp" value="0.00083175" constant="true"/>
+      <parameter id="p_HXK1_Kglc" value="0.0137" constant="true"/>
+      <parameter id="p_HXK1_Kadp" value="183.8396" constant="true"/>
+      <parameter id="p_HXK1_Kg6p" value="6889.1" constant="true"/>
+      <parameter id="p_HXK1_Kt6p" value="0.2" constant="true"/>
+      <parameter id="p_G6PDH_Vm" value="21.7742" constant="true"/>
+      <parameter id="p_G6PDH_Keq" value="16.3" constant="true"/>
+    </listOfParameters>
+    <listOfReactions>
+      <reaction id="vGLK" reversible="true" fast="false">
+        <listOfReactants>
+          <speciesReference species="GLCi" stoichiometry="1" constant="true"/>
+          <speciesReference species="ATP" stoichiometry="1" constant="true"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="G6P" stoichiometry="1" constant="true"/>
+          <speciesReference species="ADP" stoichiometry="1" constant="true"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <divide/>
+              <apply>
+                <times/>
+                <ci> p_HXK1_Vm </ci>
+                <apply>
+                  <minus/>
+                  <apply>
+                    <times/>
+                    <ci> ATP </ci>
+                    <ci> GLCi </ci>
+                  </apply>
+                  <apply>
+                    <divide/>
+                    <apply>
+                      <times/>
+                      <ci> ADP </ci>
+                      <ci> G6P </ci>
+                    </apply>
+                    <ci> p_HXK1_Keq </ci>
+                  </apply>
+                </apply>
+              </apply>
+              <apply>
+                <times/>
+                <ci> p_HXK1_Katp </ci>
+                <ci> p_HXK1_Kglc </ci>
+                <apply>
+                  <plus/>
+                  <cn type="integer"> 1 </cn>
+                  <apply>
+                    <divide/>
+                    <ci> ATP </ci>
+                    <ci> p_HXK1_Katp </ci>
+                  </apply>
+                  <apply>
+                    <divide/>
+                    <ci> ADP </ci>
+                    <ci> p_HXK1_Kadp </ci>
+                  </apply>
+                </apply>
+                <apply>
+                  <plus/>
+                  <cn type="integer"> 1 </cn>
+                  <apply>
+                    <divide/>
+                    <ci> GLCi </ci>
+                    <ci> p_HXK1_Kglc </ci>
+                  </apply>
+                  <apply>
+                    <divide/>
+                    <ci> G6P </ci>
+                    <ci> p_HXK1_Kg6p </ci>
+                  </apply>
+                  <apply>
+                    <divide/>
+                    <cn type="integer"> 0 </cn>
+                    <ci> p_HXK1_Kt6p </ci>
+                  </apply>
+                </apply>
+              </apply>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+      <reaction id="vG6PDH" reversible="true" fast="false">
+        <listOfReactants>
+          <speciesReference species="G6P" stoichiometry="1" constant="true"/>
+          <speciesReference species="NADP" stoichiometry="1" constant="true"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="PG6" stoichiometry="1" constant="true"/>
+          <speciesReference species="NADPH" stoichiometry="1" constant="true"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> p_G6PDH_Vm </ci>
+              <apply>
+                <minus/>
+                <apply>
+                  <times/>
+                  <ci> NADP </ci>
+                  <ci> G6P </ci>
+                </apply>
+                <apply>
+                  <divide/>
+                  <apply>
+                    <times/>
+                    <ci> NADPH </ci>
+                    <ci> PG6 </ci>
+                  </apply>
+                  <ci> p_G6PDH_Keq </ci>
+                </apply>
+              </apply>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+    </listOfReactions>
+  </model>
+</sbml>

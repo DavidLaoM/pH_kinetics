@@ -1,4 +1,4 @@
-clear
+% clear
 % % recalling figures
 % c_royalBlue = [65	105	225]/255; % royalblue
 % c_midnightblue = [25	25	112]/255; % midnightblue
