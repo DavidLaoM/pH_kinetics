@@ -47,9 +47,9 @@
 	- supplementary
 	- supplementary_enzyme_by_enzyme
  - models
-	- models
+	- python
+	- sbml
  - parameter_estimation
-	- parameter_estimation
  - requirements
 	- additional_assays
 	- control
