@@ -37,7 +37,7 @@
  - main_manuscript_visualizations: produces the plots found in the article
 
  Contributors:
- TBA
+ Lao‐Martil, D., Luzia, L.
  
  Folder structure:
  - data
