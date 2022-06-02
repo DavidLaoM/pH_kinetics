@@ -3,7 +3,7 @@
  pH dependency of glycolytic enzymes. Progression curve analysis.
  
  Citation:
- TBA
+ Luzia, L., Lao‐Martil, D., Savakis, P., van Heerden, J., van Riel, N. A. W., & Teusink, B. (2022). pH dependencies of glycolytic enzymes of yeast under in vivo‐like assay conditions. The FEBS Journal.
  
  Keywords:
  Saccharomyces cerevisiae, glycolysis, enzymes, pH dependency, progression curve analysis
